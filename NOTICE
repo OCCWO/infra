@@ -1,0 +1,29 @@
+OCCWO Infra Project
+https://github.com/OCCWO/infra
+
+This software is developed and maintained by the OCCWO Project Team.
+The project is distributed under the Apache License, Version 2.0.
+
+Description:
+OCCWO is a microservices-based infrastructure for marketplace automation, 
+including the following core components:
+
+- service_process: Core business process engine based on Camunda BPM
+- service_mp: Marketplace integration and data synchronization service
+- service_crm: Client data management service
+- service_web: Frontend interaction service
+- service_file: Document and file storage service
+- service_provider: Supplier data integration service
+- service_persist: PostgreSQL database management service
+- service_sender: Notification service (Telegram, Email, VK)
+- service_moderation: AI-based product moderation and content generation service
+
+Additional system modules:
+- Envoy (Proxy), RabbitMQ (Messaging), Redis (Caching), Fluentd (Logging), Consul (Service discovery).
+
+The original code repositories are available at:
+https://github.com/OCCWO/
+
+For more information, refer to each service's repository.
+
+---
