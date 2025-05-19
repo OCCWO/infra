@@ -26,7 +26,7 @@
 
 
 # Список микросервисов
-### [service_process](https://github.com/occwo/service_process)
+### [service_process](https://github.com/carpetti/service_process)
   Основной сервис для обработки сложных бизнес-процессов. Поддерживает следующие процессы:
   - Создание связок товаров между собой.
   - Отложенное создание сущности-связи с маркетплейсами (сохранение внешних ID и других данных).
@@ -41,37 +41,36 @@
     + Генерация индивидуальных документов для каждого товара.
   - Сбор и генерация отчётов, метрик, статистики и каналов взаимодействия между микросервисами.
 
-### [service_mp](https://github.com/occwo/service_mp)
+### [service_mp](https://github.com/carpetti/service_mp)
   Обрабатывает взаимодействие с маркетплейсами:
   - Синхронизация данных о товарах и заказах.
   - Публикация данных из service_process через очереди RabbitMQ.
   - Сохранение чеков и документов через service_file.
 
-### [service_crm](https://github.com/occwo/service_crm), service_web
+### [service_crm](https://github.com/carpetti/service_crm), service_web
   Отвечает за обработку клиентских данных:
   - Управление пользовательскими данными, заказами и историями взаимодействий.
   - Взаимодействие с service_persist для хранения данных.
   - Обработка пользовательских запросов.
 
-### [service_file](https://github.com/occwo/service_file)
+### [service_file](https://github.com/carpetti/service_file)
   Управление файлами:
   - Обработка файлов для хранения в облаке или локальном файловом хранилище.
   - Генерация документов и YML-выгрузок.
 
-### [service_provider](https://github.com/occwo/service_provider)
+### [service_provider](https://github.com/carpetti/service_provider)
   Работа с поставщиками:
   - Получение данных о товарах и их обновление.
 
-### [service_persist](https://github.com/occwo/service_persist)
-  Основной сервис для работы с базой данных:
-  - мс entiy.
+### [service_persist](https://github.com/carpetti/service_persist)
+  Основной сервис для работы с базой данных (мс entity).
 
-### [service_sender](https://github.com/occwo/service_sender)
+### [service_sender](https://github.com/carpetti/service_sender)
   Отправка уведомлений:
   - Уведомления через Telegram, email и VK.
 
-### [service_moderation](https://github.com/occwo/service_moderation)
-  Модерация товаров через AI:
+### [service_moderation](https://github.com/carpetti/service_moderation)
+  Модерация товаров через AI (Gemeni \ GPT o4-mini):
   - Метод модерации товара по указанному промпту.
   - Метод создания описания товара из набора характеристик.
 
@@ -93,4 +92,7 @@
 - system_cache: Redis.
 - system_logger: Fluent - логирование.
 
-> ACF-FEKOZ-2024-2025@OCCWO
+> ACF-FEKOZ-2024-2025 | OCCWO
+
+Репозиторий экосистемы (экземпляр): https://github.com/OCCWO/infra
+
