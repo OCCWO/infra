@@ -1,0 +1,51 @@
+@startuml
+cloud "Клиент (Web/CRM)" as User
+
+node "Nginx\n(Proxy, SSL)" as Nginx <<nginx>>
+node "Envoy Proxy\n(gRPC, Discovery)" as Envoy
+
+package "OCCWO Core Microservices" {
+    [service_crm]
+    [service_file]
+    [service_process]
+    [service_moderation]
+    [service_mp]
+    [service_persist]
+    [service_notify]
+    [service_adapter]
+    [service_directory]
+}
+
+database "PostgreSQL" as PG <<postgresql>>
+queue "RabbitMQ" as RMQ <<rabbitmq>>
+database "Redis/\nMemcached" as Cache <<redis>>
+storage "File Storage\n(NFS/S3/Local)" as Storage
+cloud "Маркетплейсы (Ozon, WB, Яндекс...)" as MPs
+
+User --> Nginx : HTTPS
+Nginx --> Envoy : gRPC/REST
+
+Envoy --> service_crm
+Envoy --> service_file
+Envoy --> service_process
+Envoy --> service_moderation
+Envoy --> service_mp
+Envoy --> service_persist
+Envoy --> service_notify
+Envoy --> service_adapter
+Envoy --> service_directory
+
+service_crm --> Cache
+service_crm --> PG
+service_file --> Storage
+service_process --> service_moderation
+service_process --> RMQ
+service_process --> PG
+service_mp --> RMQ
+service_mp --> MPs
+service_persist --> PG
+
+service_file ..> PG : метаданные файлов
+service_directory ..> RMQ : синхронизация справочников
+
+@enduml

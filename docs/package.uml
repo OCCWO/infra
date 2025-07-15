@@ -1,0 +1,117 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam backgroundColor #fff
+skinparam component {
+    FontColor #000
+    BackgroundColor #faf7f5
+    BorderColor #a3643f
+}
+skinparam ArrowColor #949494
+skinparam ArrowFontColor #949494
+skinparam component<<service>> {
+    FontColor #fff
+    BackgroundColor #d09c30
+    BorderColor #a3643f
+    FontSize 16
+    FontWeight bold
+}
+skinparam component<<module>> {
+    FontColor #000
+    BackgroundColor #faf7f5
+    BorderColor #a3643f
+    FontSize 16
+    FontWeight bold
+}
+skinparam note {
+    FontColor #949494
+    BackgroundColor #faf7f5
+    BorderColor #faf7f5
+    FontSize 12
+    FontStyle italic
+}
+left to right direction
+
+component "consul" <<service>> as consul
+component "queue" <<service>> as queue
+component "cache" <<service>> as cache
+component "camunda" <<service>> as camunda
+
+component "package_repo" <<module>> as package_repo
+note right of package_repo
+обертка над протосами, ретраи, раундробин из консула
+end note
+
+component "package_util" <<module>> as package_util
+note right of package_util
+утилиты для переиспользования
+end note
+
+component "package_queue" <<module>> as package_queue
+note right of package_queue
+пакет обвязок вокруг очередей
+end note
+
+component "package_cache" <<module>> as package_cache
+note right of package_cache
+пакет коннекта к кэшу
+end note
+
+component "package_proto" <<module>> as package_proto
+note right of package_proto
+протосы
+end note
+
+component "package_yml" <<module>> as package_yml
+note right of package_yml
+yml генератор
+end note
+
+component "package_handle" <<module>> as package_handle
+note right of package_handle
+дискавери, jwt, перехватчики
+end note
+
+component "package_client" <<module>> as package_client
+note right of package_client
+пакет авто-подключаемой фабрики клиентов
+end note
+
+component "package_process" <<module>> as package_process
+note right of package_process
+пакет утилит camunda
+end note
+
+component "clients_pck" <<module>> as clients_pck
+note right of clients_pck
+Клиентские пакеты - бизнес-логика (делегаты)
+end note
+
+package_cache -down-> package_proto
+package_cache -right-> cache
+
+package_handle -down-> consul
+
+package_queue -down-> package_proto
+package_queue -right-> queue
+
+package_repo -down-> package_proto
+package_repo -right-> package_queue
+package_repo -left-> package_util
+package_repo -up-> package_handle
+
+package_util -right-> package_handle
+package_util -down-> package_proto
+
+package_client -down-> package_proto
+package_client -right-> clients_pck
+package_client -up-> package_yml
+package_client -left-> package_util
+package_client -down-> package_queue
+package_client -up-> package_handle
+package_client -left-> package_repo
+
+package_process -down-> package_repo
+package_process -right-> camunda
+package_process -up-> package_util
+
+@enduml

@@ -1,0 +1,79 @@
+@startuml
+left to right direction
+
+package "Application Layer" {
+    [service_crm]
+    [service_file]
+    [service_moderation]
+    [service_mp]
+    [service_process]
+    [service_notify]
+}
+
+package "Domain Layer" {
+    [clients_pck] as "Client Factories & Delegates"
+    [package_client]
+    [package_yml]
+}
+
+package "Infrastructure Layer" {
+    [RabbitMQ]
+    [Redis]
+    [Consul]
+    [Envoy]
+    [Camunda]
+    [Nginx]
+}
+
+package "Data/Persistence Layer" {
+    [service_persist]
+    [package_proto]
+    [PostgreSQL]
+    [FileStorage]
+}
+
+package "Integration Layer" {
+    [service_adapter]
+    [External APIs]
+    [Marketplaces]
+}
+
+[service_crm] --> [clients_pck]
+[service_file] --> [clients_pck]
+[service_moderation] --> [clients_pck]
+[service_mp] --> [clients_pck]
+[service_process] --> [clients_pck]
+
+[service_crm] --> [RabbitMQ]
+[service_mp] --> [RabbitMQ]
+[service_process] --> [RabbitMQ]
+
+[service_crm] --> [Redis]
+[service_mp] --> [Redis]
+[service_process] --> [Redis]
+
+[service_crm] --> [Envoy]
+[service_crm] --> [Nginx]
+[service_mp] --> [Envoy]
+[service_file] --> [Envoy]
+
+[service_crm] --> [service_persist]
+[service_file] --> [service_persist]
+[service_process] --> [service_persist]
+[service_process] --> [Camunda]
+[service_persist] --> [PostgreSQL]
+[service_file] --> [FileStorage]
+
+[service_mp] --> [service_adapter]
+[service_adapter] --> [External APIs]
+[service_adapter] --> [Marketplaces]
+
+[Consul] ..> [service_crm]
+[Consul] ..> [service_file]
+[Consul] ..> [service_moderation]
+[Consul] ..> [service_mp]
+[Consul] ..> [service_process]
+[Consul] ..> [service_persist]
+[Consul] ..> [service_adapter]
+
+@enduml

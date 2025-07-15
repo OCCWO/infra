@@ -1,0 +1,51 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam backgroundColor #fff
+
+skinparam component<<core>> {
+    FontColor #000
+    BackgroundColor #faf7f5
+    BorderColor #a3643f
+    FontSize 16
+    FontWeight bold
+}
+skinparam component<<package>> {
+    FontColor #000
+    BackgroundColor #faf7f5
+    BorderColor #a3643f
+    FontSize 15
+    FontWeight normal
+}
+
+rectangle "Core" as core_block {
+    component "service_file" <<core>> as service_file
+    component "service_moderation" <<core>> as service_moderation
+    component "service_persist" <<core>> as service_persist
+}
+
+rectangle "Packages" as package_block {
+    component "package_client" <<package>> as package_client
+    component "package_handle" <<package>> as package_handle
+    component "package_proto" <<package>> as package_proto
+    component "package_util" <<package>> as package_util
+    component "package_yml" <<package>> as package_yml
+}
+
+skinparam ArrowColor #a3643f
+service_file -down-> package_yml : yml
+service_file -down-> package_util : util
+service_file -down-> package_client : client
+service_file -down-> package_handle : handle
+service_file -down-> package_proto : proto
+
+skinparam ArrowColor #F9DE94
+service_moderation -down-> package_util : util
+service_moderation -down-> package_client : client
+service_moderation -down-> package_handle : handle
+service_moderation -down-> package_proto : proto
+
+skinparam ArrowColor #6B3507
+service_persist -down-> package_handle : handle
+service_persist -down-> package_proto : proto
+
+@enduml

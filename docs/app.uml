@@ -1,0 +1,133 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam backgroundColor #fff
+
+skinparam component<<core>> {
+    FontColor #000
+    BackgroundColor #faf7f5
+    BorderColor #a3643f
+    FontSize 16
+    FontWeight bold
+}
+skinparam component<<service>> {
+    FontColor #fff
+    BackgroundColor #d09c30
+    BorderColor #a3643f
+    FontSize 16
+    FontWeight bold
+}
+skinparam note {
+    FontColor #949494
+    BackgroundColor #faf7f5
+    BorderColor #faf7f5
+    FontSize 12
+    FontStyle italic
+}
+skinparam ArrowFontColor #949494
+
+top to bottom direction
+
+rectangle "Core" as core_block {
+    component "service_crm" <<core>> as service_crm
+    component "service_file" <<core>> as service_file
+    component "service_moderation" <<core>> as service_moderation
+    component "service_mp" <<core>> as service_mp
+    component "service_persist" <<core>> as service_persist
+    component "service_process" <<core>> as service_process
+    component "service_provider" <<core>> as service_provider
+    component "service_adapter" <<core>> as service_adapter
+    component "service_directory" <<core>> as service_directory
+    component "service_notify" <<core>> as service_notify
+}
+
+component "queue" <<service>> as queue
+component "cache" <<service>> as cache
+component "db" <<service>> as db
+component "storage" <<service>> as storage
+component "camunda" <<service>> as camunda
+component "llm" <<service>> as llm
+component "mp" <<service>> as mp
+component "consul" <<service>> as consul
+component "proxy" <<service>> as proxy
+
+note bottom of service_crm : crm bff
+note bottom of service_file : файловый сервис
+note bottom of service_moderation : модерация через ИИ
+note bottom of service_mp : маркетплейс интеграция
+note bottom of service_persist : слой сохранения/бд
+note bottom of service_process : процессинг (workflow)
+note bottom of service_provider : провайдеры внешних интеграций
+note bottom of service_adapter : адаптеры для интеграций
+note bottom of service_directory : справочники
+note bottom of service_notify : уведомления
+
+note bottom of queue : stomp
+note bottom of cache : redis / memcached
+note bottom of db : pg
+note bottom of storage : диск / шара и тд
+note bottom of camunda : 7
+note bottom of llm : готовые нейронки, либо своя llm в облаке
+note bottom of mp : маркетплейсы - ozon / wb / ya / sber
+note bottom of consul : discovery
+note bottom of proxy : envoy
+
+skinparam ArrowThickness 3
+skinparam ArrowColor #333
+proxy -down-> service_crm
+
+service_crm -down-> service_persist : grpc
+service_crm -down-> service_file : grpc
+service_crm -down-> service_mp : grpc
+service_crm -down-> service_directory : grpc
+service_crm -down-> service_notify : grpc
+
+service_persist -down-> db
+
+service_process -down-> camunda
+service_process -down-> service_persist : grpc
+service_process -down-> service_file : grpc
+service_process -down-> service_moderation : grpc
+service_process -down-> service_directory : grpc
+service_process -down-> service_notify : grpc
+service_process -down-> service_provider : grpc
+
+service_file -down-> storage
+service_moderation -down-> llm
+service_mp -down-> mp : proto-client
+
+skinparam ArrowThickness 2
+skinparam ArrowColor #aaa
+service_crm -down-> cache
+service_mp -down-> cache
+service_process -down-> cache
+
+skinparam ArrowThickness 2
+skinparam ArrowColor #d09c30
+service_process -down-> service_provider : que
+service_process -down-> service_mp : que
+service_adapter -down-> service_process : que
+service_mp -down-> queue
+service_process -down-> queue
+service_provider -down-> queue
+service_mp -up-> service_process : que
+
+skinparam ArrowThickness 1
+skinparam ArrowColor #e0e0e0
+skinparam ArrowStyle dashed
+
+service_crm -down-> consul
+service_file -down-> consul
+service_moderation -down-> consul
+service_mp -down-> consul
+service_persist -down-> consul
+service_process -down-> consul
+service_provider -down-> consul
+service_adapter -down-> consul
+service_directory -down-> consul
+service_notify -down-> consul
+
+skinparam ArrowColor #949494
+skinparam ArrowThickness 2
+skinparam ArrowStyle normal
+
+@enduml

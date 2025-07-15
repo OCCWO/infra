@@ -1,0 +1,34 @@
+@startuml
+actor "Пользователь CRM / Внешняя система" as User
+
+participant "service_crm" as CRMsvc
+participant "service_adapter" as Adapter
+participant "service_provider" as Provider
+participant "service_process" as Proc
+participant "service_moderation" as Mod
+participant "service_mp" as MP
+participant "RabbitMQ" as Queue
+participant "service_persist" as Persist
+participant "service_file" as File
+participant "OZON API" as Ozon
+
+User -> CRMsvc : Ручной ввод/изменение товара (gRPC/REST)
+User -> Adapter : PUSH новых/изменённых данных (gRPC/REST)
+Provider -> Proc : Автоматическое обновление (cron/parsing)
+
+CRMsvc -> Proc : Передать данные на обработку (gRPC) 
+Adapter -> Proc : Передать данные на обработку (gRPC)
+Proc -> Mod : AI-модерация, описание (gRPC)
+Mod --> Proc : Результат модерации
+Proc -> Persist : Сохранить/обновить черновик товара (gRPC)
+Proc -> File : Генерация документов/YML (gRPC)
+File --> Proc : Документы сгенерированы
+Proc -> MP : Отправка на публикацию (gRPC)
+MP -> Queue : Постановка в очередь (async)
+MP -> Ozon : Внешний API запрос
+Ozon --> MP : Ответ успешен/ошибка
+MP -> Persist : Обновить статус публикации
+Persist --> CRMsvc : Вернуть статус клиенту
+CRMsvc --> User : Ответ пользователю (успех/ошибка)
+
+@enduml
