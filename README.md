@@ -1,4 +1,5 @@
 # OCCWO
+Сайт: https://occwo.ru/
 
 ## Архитектура
 Проект OCCWO построен на микросервисной архитектуре.
@@ -340,5 +341,4 @@ Application Layer -> Domain Layer (модели, мапперы, делегат�
 
 ---
 
-> ARTYOM CHERKASOV (ACF FEKOZ) 2024-2025 | OCCWO
-
+> ARTYOM CHERKASOV (ACF FEKOZ) 2024-2025
