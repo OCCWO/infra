@@ -143,20 +143,36 @@ OCCWO выступает как вендорское промежуточное 
 ## Слои архитектуры
 
 ### Application Layer
-service_crm, service_file, service_moderation, service_mp, service_process, service_notify
-Бизнес-логика, оркестрация, обработка пользовательских запросов.
+- service_crm
+- service_file
+- service_moderation
+- service_process
+- service_notify
+- бизнес-логика, оркестрация, пользовательские запросы
 
 ### Domain Layer
-Бизнес-объекты, фабрики клиентов (package_client/clients_pck), мапперы, стратегии, делегаты, правила.
+- package_client / clients_pck
+- фабрики, мапперы, стратегии, делегаты, бизнес-правила
 
 ### Infrastructure Layer
-Очереди (RabbitMQ), кэш (Redis/Memcached), Consul (discovery), Camunda, Envoy (proxy), Postgres.
+- RabbitMQ
+- Redis/Memcached
+- Consul
+- Camunda
+- Envoy
+- Postgres
 
 ### Data/Persistence Layer
-service_persist, package_proto (protobuf, CQRS), база данных (Postgres), файловое хранилище.
+- service_persist
+- package_proto (protobuf, CQRS)
+- Postgres
+- файловое хранилище
 
 ### Integration Layer
-service_adapter, интеграции с маркетплейсами, внешними API, сервисами провайдеров.
+- service_adapter
+- service_mp (интеграция с маркетплейсами)
+- service_provider (wrapper для поставщиков, сторонние API)
+- Интеграционные шлюзы и врапперы.
 
 
 ## Горизонтальное масштабирование
